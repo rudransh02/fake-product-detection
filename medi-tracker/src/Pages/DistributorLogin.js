@@ -1,5 +1,6 @@
 import Card from '@mui/material/Card';
 import { TextField } from '@mui/material';
+
 import Button from '@mui/material/Button';
 
 const DistributorLogin = () =>
@@ -16,11 +17,29 @@ const DistributorLogin = () =>
             }} variant='outlined'>
 
                 <TextField required sx={{
+                    marginTop: '40px',
+                    marginBottom: '40px',
+                    display: 'grid',
+            }} label="Distributor ID"/>
+
+                <TextField required sx={{
+                    marginTop: '40px',
+                    marginBottom: '40px',
+                    display: 'grid',
+            }} label="Shipment Block ID"/>
+
+                <TextField required sx={{
+                    marginTop: '40px',
+                    marginBottom: '40px',
+                    display: 'grid',
+            }} label="Region Of Distribution"/>
+
+                <TextField required sx={{
                     position: 'relative',
                     marginTop: '40px',
                     marginBottom: '40px',
                     display: 'grid'
-            }} label="Full Name"/>
+            }} label="Date Of Shipment Received"/>
 
                 <TextField required sx={{
                     marginTop: '40px',
@@ -56,7 +75,7 @@ const DistributorLogin = () =>
                     marginTop: '40px',
                     marginBottom: '40px',
                     display: 'grid',
-                }} label="Cloth Cost"/>
+            }} label="Cloth Cost"/>
 
                 <Button sx={{
                      "&:hover": {
@@ -66,6 +85,7 @@ const DistributorLogin = () =>
                     paddingRight: '50px',
                     paddingLeft: '50px',
                     border: 'solid 2px',
+                    marginBottom: '20px'
             }} size='large' variant='outlined'>SUMBIT</Button>
 
             </Card>
