@@ -1,7 +1,7 @@
 const ViewPendingRequests = () => {
     return (
-        <div className="ViewPendingRequests">
-            <h1>View Pending Requests</h1>
+        <div className="pageContainer">
+            <h1 style={{color:"white"}}>View Pending Requests</h1>
         </div>
     );
 }
