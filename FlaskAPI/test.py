@@ -15,7 +15,7 @@ data = {
 
 # Make a POST request to the API endpoint
 response = requests.post(
-    'http://127.0.0.1:5000/generate_qr_genesis', json=data)
+    'http://127.0.0.1:5000/generate_qr_dist', json=data)
 print(response)
 
 # Check if the request was successful (status code 200)

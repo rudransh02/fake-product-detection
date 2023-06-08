@@ -19,6 +19,19 @@ def update_distributor_block(genesis_doc_id, append_data):
     db = firestore.client()
     collection_ref = db.collection('GenesisBlock')
     document_ref = collection_ref.document(genesis_doc_id)
-    document_ref.update({"dist1": append_data})
+
+    field_prefix = 'dist'
+    max_dist = 0
+
+    doc_data = document_ref.get().to_dict()
+    for field in doc_data.keys():
+        if field.startswith(field_prefix):
+            dist_num = int(field[len(field_prefix):])
+            if dist_num > max_dist:
+                max_dist = dist_num
+
+    new_field_name = field_prefix + str(max_dist + 1)
+
+    document_ref.update({new_field_name: append_data})
     print("Successfully added data\n", append_data)
     return 200
