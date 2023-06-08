@@ -1,3 +1,5 @@
+
+
 :root {
     --success-color: rgb(0, 184, 0);
     --error-color: rgb(197, 16, 16);
@@ -16,7 +18,7 @@
 
 .pageContainer {
     background-color: #2e0249;
-    height: 100vh;
+    height: 91.6vh;
     width: 207.5vh;
     display: flex;
     justify-content: center;
@@ -25,7 +27,6 @@
 
 .container {
     background-color: white;
-    padding: 20px;
     text-align: center;
     border-radius: 10px;
     padding: 90px;
@@ -38,6 +39,13 @@
 
 .rsr {
     color: #a91079;
+}
+
+.navbar-links a {
+    padding-left: 50px;
+    text-decoration: none;
+    color: white;
+    font-size: large;
 }
 
 /* .buttonContainer {
@@ -55,7 +63,6 @@
     border-radius: 4px;
     font-size: 16px;
 } */
-
 
 /*.form {
     padding: 30px 40px;
