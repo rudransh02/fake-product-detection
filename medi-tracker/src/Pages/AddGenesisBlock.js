@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { db } from "./firebase_config";
+import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, addDoc } from "firebase/firestore";
 import { Button, Card, TextField, Typography } from "@mui/material";
 import Header from "../header/Header";
 
 function AddGenesisBlock() {
+    const navigate = useNavigate();
     const [newFullName, setFullName] = useState("");
     const [newEmail, setEmail] = useState(0);
     const [newClothSize, setClothSize] = useState(0);
@@ -16,7 +18,7 @@ function AddGenesisBlock() {
     const [newDocId, setNewDocId] = useState("");
     const [users, setusers] = useState([]);
 
-    const usersCollectionref = collection(db, "GenesisBlock");
+    const usersCollectionref = collection(db, "Blockchain");
     const createUser = async () => {
         const docRef = await addDoc(usersCollectionref, {
             Name: newFullName,
@@ -29,16 +31,64 @@ function AddGenesisBlock() {
             // DistAppendAllowed: newDistAppendAllowed,
         });
         setNewDocId(docRef.id);
+        return docRef.id;
     };
     useEffect(() => {
         const getusers = async () => {
             const data = await getDocs(usersCollectionref);
-            // console.log(data);
             setusers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
         };
 
         getusers();
     }, []);
+
+
+
+    async function apiCallFunction(docID) {
+        const base = "http://127.0.0.1:5002/generate_qr_genesis"
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "name": `${newFullName}`,
+                "email": `${newEmail}`,
+                "cloth_category": `${newClothCategory}`,
+                "cloth_material": `${newClothMaterial}`,
+                "colth_color": `${newClothColor}`,
+                "colth_size": `${newClothSize}`,
+                "colth_price": `${newClothCost}`,
+                "docID": `${docID}`
+            })
+        };
+        await fetch(base, requestOptions)
+            .then((response) => response.blob())
+            .then((blob) => {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    const dataUrl = reader.result;
+                    localStorage.removeItem('qr_code');
+                    localStorage.setItem('qr_code', dataUrl);
+                    // const valueToPass = 'example value'; // Replace 'example value' with the value you want to pass
+                    const url = new URL('/OwnerLogin/AddGenesisBlock/QRCode', window.location.href);
+                    url.searchParams.set('value', docID);
+                    window.location.href = url.href;
+                };
+                reader.readAsDataURL(blob);
+            });
+    };
+    async function api() {
+        await createUser().then((docID) => {
+            apiCallFunction(docID)
+                .then(() => {
+                    navigate("/OwnerLogin/AddGenesisBlock/QRCode");
+                });
+        }).catch((error) => {
+            console.log(error);
+        });
+    };
+
 
     return (
         <div>
@@ -227,8 +277,8 @@ function AddGenesisBlock() {
                                     backgroundColor: "#2E0249",
                                 },
                             }}
-                            onClick={createUser}
-                            href="/OwnerLogin/AddGenesisBlock/QRCode"
+                            // onClick={createUser}
+                            onClick={api}
                         >
                             SUMBIT
                         </Button>
@@ -247,5 +297,4 @@ function AddGenesisBlock() {
         </div>
     );
 }
-
 export default AddGenesisBlock;

@@ -6,6 +6,8 @@ import OwnerLogin from "./Pages/OwnerLogin";
 import Home from "./Pages/Home";
 import "./App.css";
 import QRCode from "./Pages/QRCode";
+import QRCodeDist from "./Pages/QRCodeDist";
+
 
 function App() {
     return (
@@ -21,7 +23,7 @@ function App() {
                     <Route
                         exact
                         path="/DistributorLogin/QRCode"
-                        element={<QRCode />}
+                        element={<QRCodeDist />}
                     />
                     <Route exact path="/OwnerLogin" element={<OwnerLogin />} />
                     <Route

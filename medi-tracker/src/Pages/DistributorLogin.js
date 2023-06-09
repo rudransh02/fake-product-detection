@@ -10,19 +10,64 @@ function DistributorLogin() {
     const [newEmail, setEmail] = useState(0);
     const [newReciveDate, setReciveDate] = useState(0);
     const [newShipmentBlock, setShipmentBlock] = useState(0);
+    const [newDocID, setDocID] = useState(0);
 
     const [users, setusers] = useState([]);
 
-    const usersCollectionref = collection(db, "DistributorDB");
+    const usersCollectionref = collection(db, "Blockchain");
     const createUser = async () => {
-        await addDoc(usersCollectionref, {
-            DistributorId: newDistributorId,
-            DistributorRegion: newDistributorRegion,
-            Email: newEmail,
-            ReciveDate: newReciveDate,
-            ShipmentBlock: newShipmentBlock,
+        // const docRef = await addDoc(usersCollectionref, {
+        //     DistributorId: newDistributorId,
+        //     DistributorRegion: newDistributorRegion,
+        //     Email: newEmail,
+        //     ReciveDate: newReciveDate,
+        //     ShipmentBlock: newShipmentBlock,
+        // });
+        return newDocID;
+    };
+
+
+
+    async function apiCallFunction(docID, prevHash) {
+        const base = "http://127.0.0.1:5002/generate_qr_dist"
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "DistributorId": `${newDistributorId}`,
+                "DistributorRegion": `${newDistributorRegion}`,
+                "Email": `${newEmail}`,
+                "ReciveDate": `${newReciveDate}`,
+                "ShipmentBlock": `${newShipmentBlock}`,
+                "docID": `${docID}`,
+                "prev_hash": `${prevHash}`
+            })
+        };
+        await fetch(base, requestOptions)
+            .then((response) => response.blob())
+            .then((blob) => {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    const dataUrl = reader.result;
+                    localStorage.removeItem('qr_code');
+                    localStorage.setItem('qr_code', dataUrl);
+                    window.location.href = '/OwnerLogin/AddGenesisBlock/QRCode';
+                };
+                reader.readAsDataURL(blob);
+            });
+    };
+    async function api() {
+        await createUser().then((docID) => {
+            apiCallFunction(docID, "jkjkjkj");
+        }).catch((error) => {
+            console.log(error);
         });
     };
+
+
+
     useEffect(() => {
         const getusers = async () => {
             const data = await getDocs(usersCollectionref);
@@ -172,6 +217,23 @@ function DistributorLogin() {
                                 setReciveDate(event.target.value);
                             }}
                         />
+                        <TextField
+                            required
+                            sx={{
+                                position: "relative",
+                                marginLeft: "30px",
+                                marginRight: "30px",
+                                marginTop: "40px",
+                                backgroundColor: "white",
+                                borderRadius: "5px",
+                                marginBottom: "40px",
+                                display: "grid",
+                            }}
+                            label="Document ID"
+                            onChange={(event) => {
+                                setDocID(event.target.value);
+                            }}
+                        />
 
                         <Button
                             variant="contained"
@@ -189,7 +251,7 @@ function DistributorLogin() {
                                     backgroundColor: "#2E0249",
                                 },
                             }}
-                            onClick={createUser}
+                            onClick={api}
                         >
                             SUMBIT
                         </Button>
